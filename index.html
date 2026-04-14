@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Groundnut Trade Ledger | मूंगफली व्यापार खाता</title>
+  <meta name="description" content="Professional groundnut trading business ledger app. Manage buying/selling rates, customer transactions, and generate reports instantly."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+<!-- ===== LOGIN SCREEN ===== -->
+<div id="loginScreen" class="screen active">
+  <div class="login-bg">
+    <div class="login-bg-circle c1"></div>
+    <div class="login-bg-circle c2"></div>
+    <div class="login-bg-circle c3"></div>
+  </div>
+  <div class="login-card">
+    <div class="login-logo">
+      <span class="logo-icon">&#x1F95C;</span>
+      <h1>&#x092E;&#x942;&#x0902;&#x0917;&#x092B;&#x0932;&#x0940; &#x0935;&#x094D;&#x092F;&#x093E;&#x092A;&#x093E;&#x0930;</h1>
+      <p>Groundnut Trade Ledger</p>
+    </div>
+
+    <!-- Role Tabs: Businessman / Customer -->
+    <div class="login-tabs">
+      <button class="tab-btn active" id="businessTab" onclick="switchLoginTab('business')">
+        &#x1F454; Businessman
+      </button>
+      <button class="tab-btn" id="customerTab" onclick="switchLoginTab('customer')">
+        &#x1F464; Customer
+      </button>
+    </div>
+
+    <!-- ====== BUSINESSMAN PANEL ====== -->
+    <div id="businessLogin" class="login-form active">
+      <!-- Sign In / Sign Up sub-tabs -->
+      <div class="auth-subtabs">
+        <button class="subtab-btn active" id="bizSignInTab" onclick="switchBizTab('signin')">Sign In</button>
+        <button class="subtab-btn" id="bizSignUpTab" onclick="switchBizTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Biz Sign In -->
+      <div id="bizSignInForm">
+        <div class="form-group">
+          <label>&#x1F454; Username</label>
+          <input type="text" id="bizUsername" placeholder="Enter your username"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F512; Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="bizPassword" placeholder="Enter your password"/>
+            <button class="pw-toggle" onclick="togglePw('bizPassword', this)" type="button">&#x1F441;&#xFE0F;</button>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="loginBusiness()">&#x1F511; Sign In as Businessman</button>
+        <p class="auth-switch-hint">No account? <a href="#" onclick="switchBizTab('signup'); return false;">Sign Up here</a></p>
+      </div>
+
+      <!-- Biz Sign Up -->
+      <div id="bizSignUpForm" class="hidden">
+        <div class="form-group">
+          <label>&#x1F454; Full Name / Business Name</label>
+          <input type="text" id="bizRegName" placeholder="e.g. Ramesh Trading Co."/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F194; Choose Username</label>
+          <input type="text" id="bizRegUsername" placeholder="e.g. ramesh_biz"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F512; Set Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="bizRegPassword" placeholder="Min 4 characters"/>
+            <button class="pw-toggle" onclick="togglePw('bizRegPassword', this)" type="button">&#x1F441;&#xFE0F;</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>&#x1F512; Confirm Password</label>
+          <input type="password" id="bizRegConfirm" placeholder="Re-enter password"/>
+        </div>
+        <button class="btn-primary" onclick="registerBusiness()">&#x2705; Create Business Account</button>
+        <p class="auth-switch-hint">Already have an account? <a href="#" onclick="switchBizTab('signin'); return false;">Sign In</a></p>
+      </div>
+    </div>
+
+    <!-- ====== CUSTOMER PANEL ====== -->
+    <div id="customerLogin" class="login-form">
+      <!-- Sign In / Sign Up sub-tabs -->
+      <div class="auth-subtabs">
+        <button class="subtab-btn active" id="custSignInTab" onclick="switchCustTab('signin')">Sign In</button>
+        <button class="subtab-btn" id="custSignUpTab" onclick="switchCustTab('signup')">Sign Up</button>
+      </div>
+
+      <!-- Customer Sign In -->
+      <div id="custSignInForm">
+        <div class="form-group">
+          <label>&#x1F464; Username</label>
+          <input type="text" id="custUsername" placeholder="Enter your username" list="customerList"/>
+          <datalist id="customerList"></datalist>
+        </div>
+        <div class="form-group">
+          <label>&#x1F512; Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="custPassword" placeholder="Enter your password"/>
+            <button class="pw-toggle" onclick="togglePw('custPassword', this)" type="button">&#x1F441;&#xFE0F;</button>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="loginCustomer()">&#x1F511; Sign In</button>
+        <p class="auth-switch-hint">New customer? <a href="#" onclick="switchCustTab('signup'); return false;">Sign Up here</a></p>
+      </div>
+
+      <!-- Customer Sign Up -->
+      <div id="custSignUpForm" class="hidden">
+        <div class="form-group">
+          <label>&#x1F464; Full Name</label>
+          <input type="text" id="custRegName" placeholder="e.g. Suresh Patel"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F194; Choose Username</label>
+          <input type="text" id="custRegUsername" placeholder="e.g. suresh123"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F4F1; Mobile Number (Optional)</label>
+          <input type="tel" id="custRegMobile" placeholder="e.g. 9876543210" maxlength="10"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F512; Set Password</label>
+          <div class="pw-wrap">
+            <input type="password" id="custRegPassword" placeholder="Min 4 characters"/>
+            <button class="pw-toggle" onclick="togglePw('custRegPassword', this)" type="button">&#x1F441;&#xFE0F;</button>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>&#x1F512; Confirm Password</label>
+          <input type="password" id="custRegConfirm" placeholder="Re-enter password"/>
+        </div>
+        <button class="btn-primary" onclick="registerCustomer()">&#x2705; Create Account</button>
+        <p class="auth-switch-hint">Already registered? <a href="#" onclick="switchCustTab('signin'); return false;">Sign In</a></p>
+      </div>
+    </div>
+
+    <div id="loginError" class="login-error hidden"></div>
+  </div>
+</div>
+
+<!-- ===== BUSINESSMAN DASHBOARD ===== -->
+<div id="businessDashboard" class="screen">
+  <header class="app-header">
+    <div class="header-left">
+      <span class="header-logo">&#x1F95C;</span>
+      <div>
+        <h2>Business Dashboard</h2>
+        <span class="header-sub">&#x092E;&#x942;&#x0902;&#x0917;&#x092B;&#x0932;&#x0940; &#x0935;&#x094D;&#x092F;&#x093E;&#x092A;&#x093E;&#x0930; &#x0916;&#x093E;&#x0924;&#x093E;</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="date-badge" id="todayDate"></div>
+      <span class="logged-in-user" id="bizLoggedInUser"></span>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <!-- Stats Row -->
+    <div class="stats-row" id="statsRow">
+      <div class="stat-card">
+        <div class="stat-icon buy">&#x1F4E5;</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Buying</span>
+          <span class="stat-value" id="statTotalBuy">&#x20B9;0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon sell">&#x1F4E4;</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Selling</span>
+          <span class="stat-value" id="statTotalSell">&#x20B9;0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon profit">&#x1F4B0;</div>
+        <div class="stat-info">
+          <span class="stat-label">Net Profit</span>
+          <span class="stat-value" id="statProfit">&#x20B9;0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon customers">&#x1F465;</div>
+        <div class="stat-info">
+          <span class="stat-label">Customers</span>
+          <span class="stat-value" id="statCustomers">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Entry Form -->
+    <div class="section-card entry-section">
+      <div class="section-header">
+        <h3>&#x2795; Add New Transaction</h3>
+        <span class="section-sub">&#x0928;&#x092F;&#x093E; &#x0932;&#x0947;&#x0928;&#x0926;&#x0947;&#x0928; &#x091C;&#x094B;&#x095C;&#x0947;&#x0902;</span>
+      </div>
+      <div class="entry-form grid-form">
+        <div class="form-group">
+          <label>&#x1F4C5; Date</label>
+          <input type="date" id="entryDate"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F464; Customer Name</label>
+          <input type="text" id="entryCustomer" placeholder="Customer ka naam" list="existingCustomers"/>
+          <datalist id="existingCustomers"></datalist>
+        </div>
+        <div class="form-group">
+          <label>&#x1F504; Transaction Type</label>
+          <select id="entryType" onchange="updateRateLabel()">
+            <option value="Buying">&#x1F4E5; Buying (Khareed)</option>
+            <option value="Selling">&#x1F4E4; Selling (Bikri)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label id="rateLabel">&#x1F4B5; Buying Rate (per kg)</label>
+          <input type="number" id="entryRate" placeholder="e.g. 85.50" step="0.01" min="0" oninput="calcTotal()"/>
+        </div>
+        <div class="form-group">
+          <label>&#x2696;&#xFE0F; Weight (kg)</label>
+          <input type="number" id="entryWeight" placeholder="e.g. 100" step="0.01" min="0" oninput="calcTotal()"/>
+        </div>
+        <div class="form-group">
+          <label>&#x1F4B0; Total Amount</label>
+          <div class="calc-display" id="calcDisplay">&#x20B9; 0.00</div>
+        </div>
+        <div class="form-group">
+          <label>&#x1F4DD; Notes (Optional)</label>
+          <input type="text" id="entryNotes" placeholder="Any notes..."/>
+        </div>
+        <div class="form-group form-actions">
+          <button class="btn-primary btn-add" onclick="addTransaction()">
+            <span>&#x2705; Add Transaction</span>
+          </button>
+          <button class="btn-secondary" onclick="clearForm()">&#x1F5D1;&#xFE0F; Clear</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Rate Bar -->
+    <div class="rate-bar">
+      <div class="rate-item">
+        <span class="rate-label">&#x1F4E5; Today's Buy Rate</span>
+        <input type="number" id="todayBuyRate" class="rate-input" placeholder="&#x20B9;/kg" step="0.01"/>
+      </div>
+      <div class="rate-divider"></div>
+      <div class="rate-item">
+        <span class="rate-label">&#x1F4E4; Today's Sell Rate</span>
+        <input type="number" id="todaySellRate" class="rate-input" placeholder="&#x20B9;/kg" step="0.01"/>
+      </div>
+      <button class="btn-rate-apply" onclick="applyTodayRates()">Apply Today's Rates</button>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-bar">
+      <input type="text" id="searchFilter" placeholder="&#x1F50D; Search by customer name..." oninput="renderTable()"/>
+      <select id="typeFilter" onchange="renderTable()">
+        <option value="">All Types</option>
+        <option value="Buying">Buying</option>
+        <option value="Selling">Selling</option>
+      </select>
+      <select id="customerFilter" onchange="renderTable()">
+        <option value="">All Customers</option>
+      </select>
+      <input type="date" id="dateFromFilter" onchange="renderTable()"/>
+      <span style="color:#aaa;">to</span>
+      <input type="date" id="dateToFilter" onchange="renderTable()"/>
+      <button class="btn-export" onclick="exportToCSV()">&#x1F4E5; Export CSV</button>
+    </div>
+
+    <!-- Ledger Table -->
+    <div class="section-card table-section">
+      <div class="section-header">
+        <h3>&#x1F4CA; All Transactions</h3>
+        <span id="recordCount" class="record-count">0 records</span>
+      </div>
+      <div class="table-wrap">
+        <table class="ledger-table" id="ledgerTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Customer</th>
+              <th>Type</th>
+              <th>Rate (&#x20B9;/kg)</th>
+              <th>Weight (kg)</th>
+              <th>Total Amount</th>
+              <th>Notes</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="tableBody">
+            <tr class="empty-row">
+              <td colspan="9">No transactions yet. Add your first entry above! &#x1F95C;</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CUSTOMER VIEW ===== -->
+<div id="customerDashboard" class="screen">
+  <header class="app-header customer-header">
+    <div class="header-left">
+      <span class="header-logo">&#x1F95C;</span>
+      <div>
+        <h2 id="customerWelcome">Welcome, Customer</h2>
+        <span class="header-sub">&#x0906;&#x092A;&#x0915;&#x093E; &#x0916;&#x093E;&#x0924;&#x093E; &#x0935;&#x093F;&#x0935;&#x0930;&#x0923;</span>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="date-badge" id="customerDateBadge"></div>
+      <button class="btn-logout" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <div class="dashboard-content">
+    <!-- Customer Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-icon buy">&#x1F4E5;</div>
+        <div class="stat-info">
+          <span class="stat-label">My Purchases</span>
+          <span class="stat-value" id="custStatBuy">&#x20B9;0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon sell">&#x1F4E4;</div>
+        <div class="stat-info">
+          <span class="stat-label">My Sales</span>
+          <span class="stat-value" id="custStatSell">&#x20B9;0</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon profit">&#x1F4E6;</div>
+        <div class="stat-info">
+          <span class="stat-label">Total Weight</span>
+          <span class="stat-value" id="custStatWeight">0 kg</span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon customers">&#x1F9FE;</div>
+        <div class="stat-info">
+          <span class="stat-label">Transactions</span>
+          <span class="stat-value" id="custStatCount">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Customer Ledger -->
+    <div class="section-card table-section">
+      <div class="section-header">
+        <h3>&#x1F4CB; My Transaction History</h3>
+        <button class="btn-export" onclick="exportCustomerCSV()">&#x1F4E5; Download Statement</button>
+      </div>
+      <div class="table-wrap">
+        <table class="ledger-table" id="customerTable">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Rate (&#x20B9;/kg)</th>
+              <th>Weight (kg)</th>
+              <th>Total Amount</th>
+              <th>Notes</th>
+            </tr>
+          </thead>
+          <tbody id="customerTableBody">
+            <tr class="empty-row">
+              <td colspan="7">No transactions found.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== TOAST NOTIFICATION ===== -->
+<div id="toast" class="toast hidden"></div>
+
+<!-- ===== CONFIRM DIALOG ===== -->
+<div id="confirmOverlay" class="overlay hidden">
+  <div class="confirm-dialog">
+    <h3>&#x26A0;&#xFE0F; Confirm Delete</h3>
+    <p>Are you sure you want to delete this transaction?</p>
+    <div class="confirm-actions">
+      <button class="btn-danger" onclick="confirmDelete()">Yes, Delete</button>
+      <button class="btn-secondary" onclick="cancelDelete()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
